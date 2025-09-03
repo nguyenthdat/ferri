@@ -3,6 +3,9 @@ use axum::routing::get;
 use ferri_core::config::load_config;
 use ferri_core::logger::init_logger;
 
+mod api;
+mod cmd;
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let cfg = load_config()?;
