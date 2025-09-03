@@ -1,8 +1,9 @@
-use std::io;
+use std::io; // for ErrorKind when enriching errors
 use std::path::Path;
 use std::time::Duration;
 
 use crate::config::Config;
+use crate::error::{Error, Result};
 use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode, SqlitePoolOptions, SqliteSynchronous};
 use sqlx::{Pool, Sqlite};
 
@@ -10,7 +11,7 @@ use sqlx::{Pool, Sqlite};
 ///
 /// This does **not** touch the database yet; connections are opened on first use.
 /// Call [`bootstrap_db`] once at startup (in an async context) to run migrations.
-pub fn init_db(cfg: &Config) -> io::Result<Pool<Sqlite>> {
+pub fn init_db(cfg: &Config) -> Result<Pool<Sqlite>> {
     // Work with the configured path (supports both PathBuf and String via AsRef<Path>).
     let db_path = &cfg.db_path;
     let path: &Path = db_path.as_ref();
@@ -22,10 +23,10 @@ pub fn init_db(cfg: &Config) -> io::Result<Pool<Sqlite>> {
         // Ensure parent directory exists so SQLite can create the file.
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|e| {
-                io::Error::new(
-                    io::ErrorKind::Other,
+                Error::Io(io::Error::new(
+                    e.kind(),
                     format!("failed to create DB dir {}: {e}", parent.display()),
-                )
+                ))
             })?;
         }
     }
@@ -62,13 +63,9 @@ pub fn init_db(cfg: &Config) -> io::Result<Pool<Sqlite>> {
 
 /// Run pending SQLx migrations against the provided pool.
 /// Call this once during startup *after* [`init_db`].
-pub async fn bootstrap_db(pool: &Pool<Sqlite>) -> io::Result<()> {
+pub async fn bootstrap_db(pool: &Pool<Sqlite>) -> Result<()> {
     // Run migrations located under `crates/<this-crate>/migrations`.
     // Adjust the path if your migrations live elsewhere.
-    sqlx::migrate!("../../migrations")
-        .run(pool)
-        .await
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, format!("DB migrations error: {e}")))?;
-
+    sqlx::migrate!("../../migrations").run(pool).await?;
     Ok(())
 }

@@ -1,8 +1,8 @@
 use std::fs;
-use std::io;
 
 use serde::{Deserialize, Serialize};
 
+use crate::error::Result;
 use crate::util::get_running_path;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize, Serialize)]
@@ -47,14 +47,14 @@ impl Default for Config {
 
 impl Config {
     /// Create a config with defaults and ensure required directories exist.
-    pub fn with_dirs() -> io::Result<Self> {
+    pub fn with_dirs() -> Result<Self> {
         let cfg = Self::default();
         cfg.ensure_dirs()?;
         Ok(cfg)
     }
 
     /// Ensure log and DB parent directories exist.
-    pub fn ensure_dirs(&self) -> io::Result<()> {
+    pub fn ensure_dirs(&self) -> Result<()> {
         if let Some(ref p) = self.log_path {
             fs::create_dir_all(p)?;
         }
@@ -71,31 +71,21 @@ impl Config {
     }
 
     /// Load config from a TOML file.
-    pub fn load_from_file<P: AsRef<std::path::Path>>(path: P) -> io::Result<Self> {
+    pub fn load_from_file<P: AsRef<std::path::Path>>(path: P) -> Result<Self> {
         let content = fs::read_to_string(path)?;
-        let cfg: Config = toml::from_str(&content).map_err(|e| {
-            io::Error::new(
-                io::ErrorKind::InvalidData,
-                format!("TOML parse error: {}", e),
-            )
-        })?;
+        let cfg: Config = toml::from_str(&content)?;
         Ok(cfg)
     }
 
     /// Save config to a TOML file.
-    pub fn save_to_file<P: AsRef<std::path::Path>>(&self, path: P) -> io::Result<()> {
-        let content = toml::to_string_pretty(self).map_err(|e| {
-            io::Error::new(
-                io::ErrorKind::InvalidData,
-                format!("TOML serialize error: {}", e),
-            )
-        })?;
+    pub fn save_to_file<P: AsRef<std::path::Path>>(&self, path: P) -> Result<()> {
+        let content = toml::to_string_pretty(self)?;
         fs::write(path, content)?;
         Ok(())
     }
 }
 
-pub fn load_config() -> io::Result<Config> {
+pub fn load_config() -> Result<Config> {
     let path = get_running_path().join("config.toml");
     if path.exists() {
         Config::load_from_file(path)

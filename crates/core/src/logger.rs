@@ -1,4 +1,6 @@
 use crate::config::{Config, LogRotation};
+use crate::error::Result;
+
 use std::io::{self, IsTerminal};
 use tracing::error;
 use tracing_appender::{
@@ -33,7 +35,7 @@ impl Default for LoggingGuards {
 /// - Optional rolling error-only log at `log_error_path`
 ///
 /// Returns guards that must be kept alive to ensure logs are flushed.
-pub fn init_logger(cfg: &Config) -> io::Result<LoggingGuards> {
+pub fn init_logger(cfg: &Config) -> Result<LoggingGuards> {
     // Ensure all directories exist per config.
     cfg.ensure_dirs()?;
 
