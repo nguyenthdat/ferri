@@ -11,4 +11,6 @@ name = "ferri"
 path = "src/main.rs"
 
 [dependencies]
+ferri-core = { path = "../core" }
+
 clap.workspace = true
