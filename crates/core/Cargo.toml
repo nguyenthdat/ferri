@@ -7,3 +7,4 @@ authors.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+sqlx = { version = "0.8.6", features = ["sqlite", "time", "runtime-tokio"] }
