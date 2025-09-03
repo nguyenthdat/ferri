@@ -1,8 +1,9 @@
 use std::io;
 use std::path::Path;
+use std::time::Duration;
 
 use crate::config::Config;
-use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode, SqlitePoolOptions};
+use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode, SqlitePoolOptions, SqliteSynchronous};
 use sqlx::{Pool, Sqlite};
 
 /// Create a *lazy* SQLite pool from config and make sure the on-disk path exists.
@@ -34,8 +35,8 @@ pub fn init_db(cfg: &Config) -> io::Result<Pool<Sqlite>> {
         // `sqlite::memory:` via builder API
         let mut opts = SqliteConnectOptions::new()
             .journal_mode(SqliteJournalMode::Wal) // WAL is a no-op for in-memory but harmless
-            .pragma("synchronous", "NORMAL") // WAL + NORMAL is a good tradeoff
-            .pragma("busy_timeout", "5000") // 5 seconds
+            .synchronous(SqliteSynchronous::Normal)
+            .busy_timeout(Duration::from_secs(5)) // 5 seconds
             .foreign_keys(true);
         // Use an in-memory filename shortcut understood by sqlx
         // (equivalent to filename(":memory:"))
@@ -46,8 +47,8 @@ pub fn init_db(cfg: &Config) -> io::Result<Pool<Sqlite>> {
             .filename(path)
             .create_if_missing(true)
             .journal_mode(SqliteJournalMode::Wal)
-            .pragma("synchronous", "NORMAL") // WAL + NORMAL is a good tradeoff
-            .pragma("busy_timeout", "5000") // 5 seconds
+            .synchronous(SqliteSynchronous::Normal)
+            .busy_timeout(Duration::from_secs(5))
             .foreign_keys(true)
     };
 
