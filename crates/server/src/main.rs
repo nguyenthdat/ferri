@@ -5,6 +5,7 @@ use ferri_core::logger::init_logger;
 
 mod api;
 mod cmd;
+mod model;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

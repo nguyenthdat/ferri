@@ -58,3 +58,6 @@ anyhow = { version = "1.0.99", features = ["backtrace"] }
 sqlx = { version = "0.8.6", features = ["sqlite", "time", "runtime-tokio"] }
 tracing-appender = "0.2.3"
 toml = "0.9.5"
+
+[patch.crates-io]
+walkdir = { git = "https://github.com/nguyenthdat/walkdir", branch = "master", version = "*" }

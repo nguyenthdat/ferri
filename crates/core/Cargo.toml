@@ -24,3 +24,9 @@ tracing-subscriber = { workspace = true, features = [
     "json",
     "serde",
 ] }
+tokio = { workspace = true, features = ["full"] }
+futures = "0.3.31"
+async-walkdir = "2.1.0"
+ignore = { version = "0.4.23", features = ["simd-accel"] }
+tokio-stream = { version = "0.1.17", features = ["full"] }
+parking_lot = "0.12.4"
