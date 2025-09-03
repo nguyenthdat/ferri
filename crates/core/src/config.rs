@@ -14,6 +14,7 @@ pub enum LogRotation {
 
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize, Serialize)]
 pub struct Config {
+    pub addr: String,
     pub port: u16,
     pub https_port: u16,
     pub log_path: Option<String>,
@@ -31,6 +32,7 @@ impl Default for Config {
         let log_error_path = path.join("logs/error");
 
         Self {
+            addr: "0.0.0.0".to_string(),
             port: 8080,
             https_port: 8443,
             log_level: "info".to_string(),
@@ -90,5 +92,16 @@ impl Config {
         })?;
         fs::write(path, content)?;
         Ok(())
+    }
+}
+
+pub fn load_config() -> io::Result<Config> {
+    let path = get_running_path().join("config.toml");
+    if path.exists() {
+        Config::load_from_file(path)
+    } else {
+        let cfg = Config::with_dirs()?;
+        cfg.save_to_file(get_running_path().join("config.toml"))?;
+        Ok(cfg)
     }
 }

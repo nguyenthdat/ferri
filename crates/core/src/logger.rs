@@ -59,6 +59,7 @@ pub fn init_logger(cfg: &Config) -> io::Result<LoggingGuards> {
             let appender = rolling::Builder::new()
                 .rotation(rotation.clone())
                 .filename_prefix("ferri")
+                .filename_suffix("log")
                 .build(dir)
                 .map_err(|e| {
                     io::Error::new(
@@ -83,7 +84,8 @@ pub fn init_logger(cfg: &Config) -> io::Result<LoggingGuards> {
         if let Some(dir) = &cfg.log_error_path {
             let appender = rolling::Builder::new()
                 .rotation(rotation)
-                .filename_prefix("error")
+                .filename_prefix("ferri-error")
+                .filename_suffix("log")
                 .build(dir)
                 .map_err(|e| {
                     io::Error::new(

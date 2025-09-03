@@ -1,16 +1,9 @@
 [package]
-name = "cli"
+name = "frontend"
 version.workspace = true
 edition.workspace = true
 description.workspace = true
 authors.workspace = true
 rust-version.workspace = true
 
-[[bin]]
-name = "ferri"
-path = "src/main.rs"
-
 [dependencies]
-ferri-core = { path = "../core" }
-
-clap.workspace = true

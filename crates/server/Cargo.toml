@@ -1,0 +1,21 @@
+[package]
+name = "server"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "ferri"
+path = "src/main.rs"
+
+[dependencies]
+ferri-core = { path = "../core" }
+
+clap.workspace = true
+tokio = { workspace = true, features = ["full"] }
+anyhow.workspace = true
+tracing.workspace = true
+axum = { workspace = true, features = ["http2", "macros", "multipart", "ws"] }
+uuid = "1.18.1"
