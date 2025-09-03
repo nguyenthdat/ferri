@@ -422,6 +422,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "core"
+version = "0.1.0"
+dependencies = [
+ "config",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "thiserror 2.0.16",
+ "toml",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -609,21 +624,6 @@ dependencies = [
  "concurrent-queue",
  "parking",
  "pin-project-lite",
-]
-
-[[package]]
-name = "ferri-core"
-version = "0.1.0"
-dependencies = [
- "config",
- "serde",
- "serde_json",
- "sqlx",
- "thiserror 2.0.16",
- "toml",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
 ]
 
 [[package]]
@@ -1777,7 +1777,7 @@ dependencies = [
  "anyhow",
  "axum",
  "clap",
- "ferri-core",
+ "core",
  "tokio",
  "tracing",
  "uuid",

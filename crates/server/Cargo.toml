@@ -11,7 +11,8 @@ name = "ferri"
 path = "src/main.rs"
 
 [dependencies]
-ferri-core = { path = "../core" }
+# Ferri Internal crates
+core = { path = "../core" }
 
 clap.workspace = true
 tokio = { workspace = true, features = ["full"] }

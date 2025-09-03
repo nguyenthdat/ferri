@@ -6,4 +6,7 @@ description.workspace = true
 authors.workspace = true
 rust-version.workspace = true
 
+[lib]
+name = "ferri_frontend"
+
 [dependencies]

@@ -1,5 +1,5 @@
 [package]
-name = "ferri-core"
+name = "core"
 version.workspace = true
 edition.workspace = true
 description.workspace = true
